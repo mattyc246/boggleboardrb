@@ -40,29 +40,46 @@ class Boggle
 
 	def play_round
 
-		# Start by shaking the dice to get the new board
-		new_board = shake_dice!
-		# Display the board on the screen
-		print_board(new_board)
-		# Take the user input of a word
-		guess = word_guess
-		# Validate that the first letter is even found inside the board
-		validate_guess(new_board, guess)
-		# Take all the indexes of the first letter of the word in the board
-		starting_letters = find_starting_letters(new_board, guess)
+    guess = ""
 
-		starting_letter.each do |letter|
+    until guess == ['Q','U','I','T']
+      
+      game_state = true
+      # Start by shaking the dice to get the new board
+      new_board = shake_dice!
+      # Display the board on the screen
+      print_board(new_board)
+      # Take the user input of a word
+      guess = word_guess
+      # Validate that the first letter is even found inside the board
+      validate_guess(new_board, guess)
+      # Get all the possible starting points of the word in the board
+      starting_letters = find_starting_letters(new_board, guess)
 
-			# Get the surrounding letters & indexes for the current letter
-			letters = find_surrounding_letters(new_board, letter)
-      indexes = find_surrounding_indexes(letter)
-      current_letter = new_board[letter]
-      validate_letter(current_letter, letters)
-      current_letter = next_letter()
+      until game_state == false
+        # Start with the first starting point and check if the word can be matched there or not
+        starting_letters.each do |letter|
 
-			
+          puts letter
+          # If it can, return a win, if it cannot check the next starting point
+          # If all the starting points have been checked and the word cannot be made anywhere then the guess is not valid
 
-		end
+          # CHECKING LOGIC
+          # Given the first index, get all the surrounding letters and indexes
+          # Check that the second letter in the word is within those surrounding letters
+          # If it is and the number of occurances if greater than 1, note checking more than 1 may be necessary
+          # If it is and the number of occurances is only 1 then get the new surrounding letters and indexes
+          # If the final letter in the guess is found in the surrounding indexes, return a win
+          # Otherwise move onto the next occurance (if there is one)
+          # If the occurance is only 1 and the next letter is not in the surrounding then move onto the next starting point
+        end
+
+        game_state = false
+        puts "Your guess is not valid! Try again!"
+
+      end
+
+    end
 
 	end
 
@@ -100,10 +117,11 @@ class Boggle
 	end
 
 	def word_guess
-
+   
 		puts "== Make a guess on a word =="
-		new_word = gets.chomp.to_a
-		return new_word
+		new_word = gets.chomp
+    split_word = new_word.split("")
+    return split_word
 
 	end
 
@@ -149,6 +167,12 @@ class Boggle
 
   end
 
+  def find_next_index(letter, arr)
+
+    return arr.index(letter)
+
+  end
+
   def next_letter(index, indexes)
 
     next_letter = indexes[index]
@@ -158,7 +182,7 @@ class Boggle
 		
 end
 
-########### Driver Code ###########
+# ########## Driver Code ###########
 
 # dice = [['A','A','E','E','G','N'],
 # 		['E','L','R','T','T','Y'],
@@ -179,4 +203,4 @@ end
 
 # boggle = Boggle.new(dice)
 # board = boggle.shake_dice!
-# boggle.print_board(board)
+# boggle.play_round

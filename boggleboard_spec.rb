@@ -48,6 +48,13 @@ RSpec.describe Boggle do
 		Then { results == true }
 	end
 
+  context '#find_next_index' do
+    Given (:letter) { "A" }
+    Given (:surrounding) { ['T','A','E','E','U','I','R','S'] }
+    When (:results) { boggle.find_next_index(letter, surrounding) }
+    Then { results == 1 }
+  end
+
   context '#next_letter' do
     Given (:index) { 5 }
     Given (:surrounding) { [0,1,2,4,6,8,9,10] }
